@@ -1,0 +1,53 @@
+name: Build Meikade
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: build QtAseman
+    steps:
+      - name: install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: '5.15.2'
+      - name: clone QtAseman
+        uses: actions/checkout@v2
+        with:
+          repository: Aseman-Land/QtAseman
+          submodules: recursive
+          path: 'aseman'
+      - name: qmake aseman
+        run: |
+          mkdir build
+          cd build
+          qmake -r ..
+        working-directory: 'aseman'
+      - name: make aseman
+        run: |
+          cd build
+          make -j2
+        working-directory: 'aseman'
+      - name: install aseman
+        run: |
+          cd build
+          make install
+        working-directory: 'aseman'
+
+      - name: clone meikade
+        uses: actions/checkout@v2
+        with:
+          path: 'meikade'
+      - name: qmake meikade
+        run: |
+          mkdir build
+          cd build
+          qmake -r ..
+        working-directory: 'meikade'
+      - name: make meikade
+        run: |
+          cd build
+          make -j2
+        working-directory: 'meikade'
+
+  
+
